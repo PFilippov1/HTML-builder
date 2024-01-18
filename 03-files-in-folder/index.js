@@ -1,34 +1,25 @@
-//=========================================
-// const fs = require('node:fs');
-// const path = require('path');
-// const readline = require('readline');
 
-// const rl = readline.createInterface({
-//   input: process.stdin,
-//   output: process.stdout
-// });
 
-// const pathToFile = path.join(__dirname, './text.txt');
+const fs = require('fs/promises');
+const path = require('path');
+const pathToDirectory = path.join(__dirname, 'secret-folder');
+async function readDirectory() {
+  try {
+    const files = await fs.readdir(pathToDirectory, { withFileTypes: true });
+    // console.log(files)
+    for (const dirent of files) {
+      if (dirent.isFile()) {
+        const fileName = dirent.name;
+        const fileExtension = fileName.split('.')[1];
+        const fileStats = await fs.stat(path.join(pathToDirectory, fileName));
+        const fileSizeInKB = fileStats.size / 1024;
 
-// const startPrompt = () => {
-//   rl.question('Enter text (or type "exit" to quit): ', (input) => {
-//     if (input.toLowerCase() === 'exit') {
-//       console.log('Farewell! Process terminated.');
-//       rl.close();
-//     } else {
-//       fs.appendFile(pathToFile, input + '\n', (err) => {
-//         if (err) throw err;
-//         console.log('Text appended to file!');
-//         startPrompt();
-//       });
-//     }
-//   });
-// };
+        console.log(`${fileName} - ${fileExtension} - ${fileSizeInKB.toFixed(3)}kb`);
+      }
+    }
+  } catch (err) {
+    console.error('Error reading directory:', err);
+  }
+}
 
-// fs.writeFile(pathToFile, '', (err) => {
-//   if (err) throw err;
-//   console.log('Text file created!');
-//   startPrompt();
-// });
-
-// ====================================
+readDirectory();

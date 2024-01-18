@@ -5,6 +5,11 @@ const readline = require('readline');
 
 let rl = readline.createInterface(
   process.stdin, process.stdout);
+//обработчик на прерывание
+  rl.on('SIGINT', () => {
+    console.log('\nBye, see you next time!');
+    process.exit();
+  });
 
 createTextFile()
 
