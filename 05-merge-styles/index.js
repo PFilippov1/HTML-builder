@@ -15,9 +15,6 @@ async function copyFilesToArray() {
       }
     }
     console.log('All files are up-to-date!');
-    dataArr.forEach((data) => {
-      console.log(data);
-    });
     return dataArr;
   } catch (err) {
     console.error('Error copying files:', err);

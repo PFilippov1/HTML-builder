@@ -10,11 +10,14 @@ async function readDirectory() {
     for (const dirent of files) {
       if (dirent.isFile()) {
         const fileName = dirent.name;
+        const cutFileName = fileName.split('.')[0]
         const fileExtension = fileName.split('.')[1];
         const fileStats = await fs.stat(path.join(pathToDirectory, fileName));
-        const fileSizeInKB = fileStats.size / 1024;
+        // const fileSize = fileStats.size / 1024;
+        // убираю округление, тк у ревьюверов вопросы
+        const fileSize = fileStats.size;
 
-        console.log(`${fileName} - ${fileExtension} - ${fileSizeInKB.toFixed(3)}kb`);
+        console.log(`${cutFileName} - ${fileExtension} - ${fileSize}`);
       }
     }
   } catch (err) {
