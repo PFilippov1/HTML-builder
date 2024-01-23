@@ -29,28 +29,50 @@ async function createDirectory() {
 
 async function readAndReplaceTag() {
   try {
-    const pathTemplate = await path.join(__dirname, 'template.html')
-    // получаем string для template
-    const dataTemplate = await fs.readFile(pathTemplate, 'utf-8')
-    // console.log(readTemplate)
-    // получем строки для замены
-    // const articles = await path.join(__dirname, 'components/articles.html')
-    // const footer = await path.join(__dirname, 'components/footer.html')
-    // const header = await path.join(__dirname, 'components/header.html')
-    // //TODO
-    // const about = await path.join(__dirname, 'components/about.html')
-    //читаем файлы и меняем контент:
-    const newContentTemplate = dataTemplate
-      .replace('{{articles}}', await fs.readFile(path.join(__dirname, 'components/articles.html'), 'utf-8'))
-      .replace('{{footer}}', await fs.readFile(path.join(__dirname, 'components/footer.html'), 'utf-8'))
-      .replace('{{header}}', await fs.readFile(path.join(__dirname, 'components/header.html'), 'utf-8'))
-      .replace('{{about}}', await fs.readFile(path.join(__dirname, 'components/about.html'), 'utf-8'));
-    // console.log(newContentTemplate)
-    // переписываем index.html
-    await fs.writeFile(path.join(__dirname, 'project-dist/index.html'), newContentTemplate)
+    const pathTemplate = path.join(__dirname, 'template.html');
+    // Получаем содержимое шаблона
+    const dataTemplate = await fs.readFile(pathTemplate, 'utf-8');
+
+    // Заменяем теги в шаблоне на содержимое других файлов
+    let newContentTemplate = dataTemplate;
+
+    // Замена тега {{articles}}
+    try {
+      const articlesContent = await fs.readFile(path.join(__dirname, 'components/articles.html'), 'utf-8');
+      newContentTemplate = newContentTemplate.replace('{{articles}}', articlesContent);
+    } catch (error) {
+      console.error('Error reading articles.html:', error);
+    }
+
+    // Замена тега {{footer}}
+    try {
+      const footerContent = await fs.readFile(path.join(__dirname, 'components/footer.html'), 'utf-8');
+      newContentTemplate = newContentTemplate.replace('{{footer}}', footerContent);
+    } catch (error) {
+      console.error('Error reading footer.html:', error);
+    }
+
+    // Замена тега {{header}}
+    try {
+      const headerContent = await fs.readFile(path.join(__dirname, 'components/header.html'), 'utf-8');
+      newContentTemplate = newContentTemplate.replace('{{header}}', headerContent);
+    } catch (error) {
+      console.error('Error reading header.html:', error);
+    }
+
+    // Замена тега {{about}}
+    try {
+      const aboutContent = await fs.readFile(path.join(__dirname, 'components/about.html'), 'utf-8');
+      newContentTemplate = newContentTemplate.replace('{{about}}', aboutContent);
+    } catch (error) {
+      // console.error('Error reading about.html:', error);
+    }
+
+    // Переписываем index.html с обновленным содержимым
+    await fs.writeFile(path.join(__dirname, 'project-dist/index.html'), newContentTemplate);
 
   } catch (error) {
-    console.log(error)
+    console.error('Error execution:', error);
   }
 }
 readAndReplaceTag()
